@@ -1,0 +1,57 @@
+#!/bin/bash
+
+function usage() {
+    echo "usage: $(basename $0) command [args]"
+    echo
+    echo "commands:"
+    echo "    builds-add            add a new build"
+    echo "    builds-list           show installed builds"
+    echo "    builds-list-all       show all possible builds"
+    echo "    builds-recompile      recompile a build"
+    echo "    builds-switch         change shim paths to that of a build"
+    echo
+    echo "    instance-connect      connect to a specific instance"
+    echo "    instance-create       create a new instance"
+    echo "    instance-list         list all installed instances"
+    echo "    instance-logs         shows the logs of an instance using \$PAGER"
+    echo "    instance-start        start an instance"
+    echo "    instance-status       shows the status of an instance"
+    echo "    instance-stop         stop an instance"
+    echo "    instance-switch       changes shim paths to that of an instance"
+    echo
+    echo "    sources-add           add a new source"
+    echo "    sources-list          list all installed sources"
+    echo
+}
+
+function run_command() {
+    # We don't want to allow arbitrary commands. That creates a security risk.
+    local command="$1"
+    shift
+
+    case "$command" in
+        instance-create|instance-start|instance-stop|instance-connect|instance-list|instance-logs|instance-status|instance-switch|\
+        builds-list|builds-list-all|builds-add|builds-recompile|builds-switch|builds-which|\
+        sources-list|sources-add\
+        )
+            local command_file="$MYDEV_LIB/command-${command}.bash"
+            if [ ! -f "$command_file" ]; then
+                echo "ERROR: The command, ${command}, is missing!"
+                exit 1
+            else
+                source $command_file "$@"
+            fi
+            ;;
+        *)
+            usage
+            ;;
+
+    esac
+}
+
+if [ ! -d "$MYDEV_LIB" ]; then
+    echo 'ERROR: mydev library directory is not set!'
+    exit 1
+else
+    run_command "$@"
+fi
