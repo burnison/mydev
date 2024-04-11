@@ -41,6 +41,10 @@ function add_build() {
     fi
 
     git worktree add --force "${worktree}/src" "$branch"
+
+    cd "${worktree}/src"
+    git submodule update --init
+
 }
 
 add_build "$@"
