@@ -233,7 +233,7 @@ function change_replication_source() {
 
     instance_connect $to -e "
         SET GLOBAL super_read_only = 0;
-        CHANGE MASTER TO MASTER_HOST='127.0.0.1', MASTER_PORT=$from_port, MASTER_USER='replication', MASTER_PASSWORD='replication', MASTER_AUTO_POSITION=1;
+        CHANGE MASTER TO MASTER_HOST='127.0.0.1', MASTER_PORT=$from_port, MASTER_USER='replication', MASTER_PASSWORD='replication', MASTER_AUTO_POSITION=1, GET_MASTER_PUBLIC_KEY=1;
         START SLAVE;
     "
 
