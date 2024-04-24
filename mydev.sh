@@ -1,12 +1,6 @@
 function mysqlenv_get_dir() {
-    local last_arg="$2"
-    local dir="$1"
-    if [ "${BASH_SOURCE[0]}" != "" ]; then
-      dir="${BASH_SOURCE[0]}"
-    elif [[ "$last_arg" == *".sh" ]]; then
-      dir="$last_arg"
-    fi
-    echo $(dirname $dir)
+    local -r mydev_dir="${(%):-%x}"
+    echo "${mydev_dir%/*}"
 }
 
 if ! (return 0 2> /dev/null); then
@@ -14,7 +8,7 @@ if ! (return 0 2> /dev/null); then
     exit 1
 fi
 
-export MYDEV_DIR="$(mysqlenv_get_dir $0 $_)"
+export MYDEV_DIR="$(mysqlenv_get_dir)"
 export MYDEV_BIN="$MYDEV_DIR/bin"
 export MYDEV_LIB="$MYDEV_DIR/lib"
 export MYDEV_SHIMS="$MYDEV_DIR/shims"
