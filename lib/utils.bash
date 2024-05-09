@@ -66,10 +66,9 @@ function instance_switch() {
 }
 
 function instance_connect() {
-    local instance="$1"
-    local port=$(port_from_instance "$instance")
+    local instance_path="$(instance_path_for_instance "$1")"
     shift
-    mysql  -P $port -u root --password='' "$@"
+    mysql -h localhost --socket="${instance_path}/mysql.sock" -u root --password='' "$@"
 }
 
 function instance_start() {
