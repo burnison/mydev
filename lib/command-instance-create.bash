@@ -214,7 +214,7 @@ function replicate_logical() {
     local to=$2
 
     instance_connect $to -e "SET GLOBAL super_read_only=0;"
-    mysqldump -u root -h 127.0.0.1 -P $from_port --all-databases --triggers --routines --events --set-gtid-purged=ON \
+    mysqldump -u root -h 127.0.0.1 -P $from_port --single-transaction --all-databases --triggers --routines --events --set-gtid-purged=ON \
         | instance_connect $to
     change_replication_source "$from" "$to"
     instance_connect $to -e "SET GLOBAL super_read_only=1;"
