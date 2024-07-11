@@ -52,19 +52,21 @@ function recompile_build() {
         C_COMPILER=${C_COMPILER:-$(which gcc-10)}
 
     elif [[ (( $version > 5.6 )) ]]; then
-        CXX_FLAGS="-Wno-class-memaccess -Wno-parentheses -Wno-deprecated-copy ${CXX_FLAGS}"
-        CXX_COMPILER=${CXX_COMPILER:-$(which g++)}
-        C_COMPILER=${C_COMPILER:-$(which gcc)}
+        CXX_COMPILER=${CXX_COMPILER:-clang++}
+        C_COMPILER=${C_COMPILER:-clang}
+        CXX_FLAGS="-g -O0 -Wno-enum-constexpr-conversion ${CXX_FLAGS}"
+
     fi
 
     cd $build_dir
     cmake \
         -DCMAKE_INSTALL_PREFIX=$install_dir \
-        -DWITH_DEBUG=full -DCMAKE_BUILD_TYPE=Debug -DWITH_EDITLINE=bundled -DWITH_SSL=system -DWITH_COREDUMPER=0 \
+        -DWITH_DEBUG=full -DCMAKE_BUILD_TYPE=DEBUG -DWITH_EDITLINE=bundled -DWITH_SSL=system -DWITH_COREDUMPER=0 \
         -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_EXAMPLE_STORAGE_ENGINE=1 -DWITHOUT_TOKUDB=1 -DWITHOUT_ROCKSDB=1 \
         -DCMAKE_CXX_COMPILER="${CXX_COMPILER}" -DCMAKE_C_COMPILER="${C_COMPILER}" \
         -DCMAKE_CXX_FLAGS="${CXX_FLAGS}" -DCMAKE_C_FLAGS="${C_FLAGS}" \
         -DDOWNLOAD_BOOST=1 -DWITH_BOOST=boost -DENABLE_DOWNLOADS=1 -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
+        -DLLDB_EXPORT_ALL_SYMBOLS=ON \
         $src_dir .
 
     make -j $(nproc) install
