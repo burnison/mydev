@@ -10,20 +10,21 @@ collation-server = utf8mb4_unicode_520_ci
 default_storage_engine = InnoDB
 lower_case_table_names = 2
 
+log_error_verbosity = 3
+
+
 key_buffer_size = 4M
 myisam_recover_options = BACKUP,FORCE
 
 sysdate_is_now = 1
 
-skip_name_resolve = 1
-
 max_connect_errors = 1000000
 master_info_repository = TABLE
 relay_log_info_repository = TABLE
 relay_log_recovery = 1
-sync_relay_log = 1
 binlog_format = ROW
-sync_binlog = 1
+
+binlog_transaction_dependency_tracking = writeset
 
 enforce_gtid_consistency = ON
 gtid_mode = ON
@@ -33,14 +34,14 @@ max_connections = 500
 innodb_strict_mode = 1
 innodb_buffer_pool_dump_at_shutdown = 1
 innodb_buffer_pool_load_at_startup = 1
-innodb_buffer_pool_size = 512M
+innodb_buffer_pool_size = 1G
+innodb_doublewrite_pages = 128
 innodb_checksum_algorithm = crc32
 innodb_file_per_table = 1
 innodb_flush_log_at_trx_commit = 1
-;innodb_flush_method = O_DIRECT
-innodb_log_files_in_group = 2
-innodb_log_file_size = 64M
+innodb_flush_method = O_DIRECT
 innodb_print_all_deadlocks = ON
+innodb_redo_log_capacity = 1G
 
 log_slave_updates = 1
 log_queries_not_using_indexes = 1
